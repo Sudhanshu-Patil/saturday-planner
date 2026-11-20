@@ -2,7 +2,7 @@
 
 An agent that turns your city, budget, free time and mood into a realistic Saturday plan made of real places. It checks the plan in code and shows every step it took.
 
-**Live:** LIVE_URL
+**Live:** https://saturday-planner-dusky.vercel.app
 
 ## Try it
 
@@ -21,7 +21,7 @@ Open the live URL and press **Plan my Saturday**. The box is prefilled with the 
 The API takes the brief's JSON directly:
 
 ```bash
-curl -N -X POST LIVE_URL/api/plan -H "Content-Type: application/json" \
+curl -N -X POST https://saturday-planner-dusky.vercel.app/api/plan -H "Content-Type: application/json" \
   -d '{"city":"Bangalore","budget":2000,"available_time":"4 hours","mood":"tired but wants to do something fun","interests":["food","music","walks"],"constraints":["vegetarian","avoid crowded places"]}'
 ```
 
@@ -78,7 +78,18 @@ Everything the app uses is free and keyless apart from Groq: OpenStreetMap (Phot
 
 ## Evals
 
-EVAL_RESULTS
+`scripts/eval.mts` runs six scenarios against the live deployment and checks invariants: a plan exists, every stop came from OSM, the total is within budget, food is veg-safe, no validator errors are left, questions are asked when they should be, and the model fallback fires.
+
+| Scenario | Result | Model turns | Tokens | Time |
+|---|---|---|---|---|
+| Brief example (JSON) | pass | 3 | 8,622 | 4.9s |
+| Vague input | pass | 1 | 1,777 | 1.3s |
+| Unknown city | pass | 1 | 1,795 | 1.0s |
+| Tiny budget (₹100) | pass | 4 | 11,103 | 8.2s |
+| Family day, Mumbai | fail on the eval run, pass on re-run | 3 | 8,747 | 8.4s |
+| Rate limit fallback | pass | 2 | 4,573 | 4.2s |
+
+The Mumbai failure ended without a plan, during back-to-back runs on the free Groq quota. Re-run on its own, it passed: the validator rejected a crowd-prone museum and the agent swapped it out. Free-tier limits are the main source of flakiness; the model fallback absorbs most of it.
 
 ## Design
 

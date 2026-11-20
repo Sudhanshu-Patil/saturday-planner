@@ -16,7 +16,7 @@ function waitSeconds(ip: string): number {
   const now = Date.now();
   if (hits.size > 5000) hits.clear();
   const recent = (hits.get(ip) ?? []).filter((t) => now - t < 600_000);
-  if (recent.length >= 6) {
+  if (recent.length >= 20) {
     hits.set(ip, recent);
     return Math.ceil((600_000 - (now - recent[0])) / 1000);
   }
