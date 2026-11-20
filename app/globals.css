@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+/* Saturday light: graphite neutrals, one marigold accent, the route line as signature.
+   Token values adapted from unslop by Damir Sokolovsky (CC BY 4.0). */
+:root {
+  --page: #fafafa;
+  --card: #ffffff;
+  --raised: #f4f4f5;
+  --ink: #171717;
+  --ink-2: #525252;
+  --ink-3: #737373;
+  --line: rgb(23 23 23 / 0.08);
+  --line-strong: rgb(23 23 23 / 0.16);
+  --accent: #f2b705;
+  --accent-ink: #171717;
+  --accent-text: #8a6500;
+  --route: #d99a00;
+  --rain: rgb(76 116 160 / 0.22);
+  --ok: #16a34a;
+  --bad: #dc2626;
+  --warn: #8a6500;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #141415;
+    --card: #19191b;
+    --raised: #232325;
+    --ink: #ededed;
+    --ink-2: #a1a1a6;
+    --ink-3: #85858b;
+    --line: rgb(237 237 237 / 0.08);
+    --line-strong: rgb(237 237 237 / 0.16);
+    --accent-text: #f2b705;
+    --route: #f2b705;
+    --rain: rgb(143 176 214 / 0.2);
+    --ok: #4cc38a;
+    --bad: #e5484d;
+    --warn: #e2b53e;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-text: var(--accent-text);
+  --color-route: var(--route);
+  --color-ok: var(--ok);
+  --color-bad: var(--bad);
+  --color-warn: var(--warn);
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --ease-out: var(--ease);
+}
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The one entrance: plan rows rise in once. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.rise {
+  animation: rise 420ms var(--ease) both;
+}
+
+/* Only things that are actually running spin. */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-strong);
+  border-top-color: var(--ink-2);
+  animation: spin 700ms linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .spinner {
+    animation: none;
+  }
+}
+
+/* Leaflet: numbered stop pins in the accent, quiet attribution. */
+.stop-pin {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: 500 13px/1 var(--font-figtree), system-ui, sans-serif;
+  border: 2px solid var(--card);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+}
+.leaflet-container {
+  font-family: inherit;
+  background: var(--raised);
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+}
+.route-line {
+  stroke: var(--route);
+}
+/* Standard OSM tiles, quieted so the route carries the colour. */
+.leaflet-tile-pane {
+  filter: grayscale(1) contrast(0.85) brightness(1.06);
+}
+@media (prefers-color-scheme: dark) {
+  .leaflet-tile-pane {
+    filter: grayscale(1) invert(1) contrast(0.8) brightness(0.9);
+  }
+}
